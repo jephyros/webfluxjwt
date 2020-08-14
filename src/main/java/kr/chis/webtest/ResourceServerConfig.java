@@ -2,13 +2,9 @@ package kr.chis.webtest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
 /**
@@ -17,11 +13,13 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
  * Remark :
  */
 @EnableWebFluxSecurity
-//@EnableResourceServer
-//@Configuration
+@EnableReactiveMethodSecurity
 public class ResourceServerConfig{// extends ResourceServerConfigurerAdapter {
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private SecurityContextRepository securityContextRepository;
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http){
@@ -31,11 +29,14 @@ public class ResourceServerConfig{// extends ResourceServerConfigurerAdapter {
         http.csrf().disable();
         http.logout().disable();
 
+        http.authenticationManager(authenticationManager)
+                .securityContextRepository(securityContextRepository);
+
 
         http.authorizeExchange()
                 .pathMatchers("/**")
                 .authenticated()
-                .and().oauth2ResourceServer();
+                ;
 
 //                .and()
   //              .oauth2ResourceServer().jwt();
