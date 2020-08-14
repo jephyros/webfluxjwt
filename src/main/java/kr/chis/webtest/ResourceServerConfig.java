@@ -3,6 +3,7 @@ package kr.chis.webtest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -24,6 +25,7 @@ public class ResourceServerConfig{// extends ResourceServerConfigurerAdapter {
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http){
+
         http.httpBasic().disable();
         http.formLogin().disable();
         http.csrf().disable();
@@ -31,9 +33,12 @@ public class ResourceServerConfig{// extends ResourceServerConfigurerAdapter {
 
 
         http.authorizeExchange()
-                .pathMatchers("/**").authenticated()
-                .and()
-                .oauth2ResourceServer().jwt();
+                .pathMatchers("/**")
+                .authenticated()
+                .and().oauth2ResourceServer();
+
+//                .and()
+  //              .oauth2ResourceServer().jwt();
 
 
         return http.build();
