@@ -13,7 +13,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
  * Remark :
  */
 @EnableWebFluxSecurity
-@EnableReactiveMethodSecurity
+//@EnableReactiveMethodSecurity
 public class ResourceServerConfig{// extends ResourceServerConfigurerAdapter {
     @Autowired
     private AuthenticationManager authenticationManager;
